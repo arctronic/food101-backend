@@ -1,4 +1,5 @@
 from utils import prediction_random_images
+from nutrition import get_nutrition
 import requests
 import streamlit as st
 
@@ -9,14 +10,6 @@ def allowed_file(filename):
 
 
 def predict(file):
-    # if request.method == 'POST':
-    #     file = request.files.get('file')
-    #     print(request.files)
-    #     if file is None or file.filename == "":
-    #         return jsonify({'error': 'no file'})
-    #     if not allowed_file(filename=file.filename):
-    #         return jsonify({'error': 'format not supported.'})
-
     if file:
         prediction = prediction_random_images([file.getvalue()])
         print(prediction)
@@ -58,6 +51,22 @@ def cards(data):
     st.caption("Turorial: ")
     st.video(data=data["strYoutube"])
 
+def nutritionDetails(food_name):
+    nutritions = get_nutrition(food_name)
+    if nutritions is not None:
+        markdownString = """
+        | Terms      | Values |
+        | :----:     | :----: | 
+        |Average Serving Size|{}|
+        |Calories |{}|
+        |Fat|{}|
+        |Cholesterol|{}|
+        |Carbohydrate|{}|
+        """.format(nutritions["serving"],nutritions["calories"],nutritions["fat"],nutritions["cholesterol"],nutritions["carbohydrate"])
+        st.subheader("The nutrition info: ")
+        st.markdown(markdownString)
+    else:
+        return
 
 if __name__ == '__main__':
     st.header("EfficientNet (Based on Food-101 DataSet)", anchor=None)
@@ -67,7 +76,8 @@ if __name__ == '__main__':
         _predict = predict(file)
         st.image(file)
         food_name = _predict["recipeName"].replace("_", " ")
-        st.markdown('Model classified as: `{}`'.format(food_name))
+        st.subheader('Model classified as: `{}`'.format(food_name))
+        nutritionDetails(food_name)
         if _predict["other"]["meals"]:
             more_data = _predict["other"]["meals"]
             st.subheader("Found {} recipe for {}".format(
