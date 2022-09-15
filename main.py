@@ -78,7 +78,7 @@ if __name__ == '__main__':
     clicked = False
     camera =  st.camera_input(label="Or, Take a picture of your food",)
     if file or camera:
-        clicked = st.button("Predict", disabled= False if file else True)
+        clicked = st.button("Predict", disabled= False if file or camera else True)
     if clicked:
         _predict = ""
         if file:
