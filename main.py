@@ -76,7 +76,7 @@ if __name__ == '__main__':
     st.markdown('The current model has `92%` validation accuracy. Model can classify food items belongs to *Food-101* dataset classes.', unsafe_allow_html=True)
     file = st.file_uploader(label="Upload image (JPG, JPEG Only)")
     clicked = False
-    camera =  st.camera_input(label="Or, Take a picture of your food",)
+    camera =  st.camera_input(label="Or, Take a picture of your food",).getvalue()
     if file or camera:
         clicked = st.button("Predict", disabled= False if file or camera else True)
     if clicked:
