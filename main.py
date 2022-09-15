@@ -51,6 +51,7 @@ def cards(data):
     st.caption("Turorial: ")
     st.video(data=data["strYoutube"])
 
+
 def nutritionDetails(food_name):
     nutritions = get_nutrition(food_name)
     if nutritions is not None:
@@ -62,21 +63,32 @@ def nutritionDetails(food_name):
         |Fat|{}|
         |Cholesterol|{}|
         |Carbohydrate|{}|
-        """.format(nutritions["serving"],nutritions["calories"],nutritions["fat"],nutritions["cholesterol"],nutritions["carbohydrate"])
+        """.format(nutritions["serving"], nutritions["calories"], nutritions["fat"], nutritions["cholesterol"], nutritions["carbohydrate"])
         st.subheader("The nutrition info: ")
         st.markdown(markdownString)
     else:
         return
 
 if __name__ == '__main__':
-    st.header("EfficientNet (Based on Food-101 DataSet)", anchor=None)
+
+    st.header("Food Classifaction and Nutrition Prediction", anchor=None)
+    st.subheader("Based on `EfficientNet` and Food-101 Dataset")
     st.markdown('The current model has `92%` validation accuracy. Model can classify food items belongs to *Food-101* dataset classes.', unsafe_allow_html=True)
     file = st.file_uploader(label="Upload image (JPG, JPEG Only)")
-    if file:
-        _predict = predict(file)
-        st.image(file)
+    clicked = False
+    camera =  st.camera_input(label="Or, Take a picture of your food",)
+    if file or camera:
+        clicked = st.button("Predict", disabled= False if file else True)
+    if clicked:
+        _predict = ""
+        if file:
+            _predict = predict(file)
+        else:
+            _predict = predict(camera)
+        st.caption("Converted the image to 224x224 size")
+        st.image(file,width=224)
         food_name = _predict["recipeName"].replace("_", " ")
-        st.subheader('Model classified as: `{}`'.format(food_name))
+        st.subheader('Model classifies the food as: `{}`'.format(food_name))
         nutritionDetails(food_name)
         if _predict["other"]["meals"]:
             more_data = _predict["other"]["meals"]
