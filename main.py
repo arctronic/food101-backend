@@ -76,18 +76,18 @@ if __name__ == '__main__':
     st.markdown('The current model has `92%` validation accuracy. Model can classify food items belongs to *Food-101* dataset classes.', unsafe_allow_html=True)
     file = st.file_uploader(label="Upload image (JPG, JPEG Only)")
     clicked = False
-    camera =  st.camera_input(label="Or, Take a picture of your food")
+    # camera =  st.camera_input(label="Or, Take a picture of your food")
 
-    if file:
-        clicked = st.button("Predict", disabled= False if file  else True)
-    elif camera is not None:
-        clicked = st.button("Predict", disabled= False if camera else True)
+    # if file:
+    clicked = st.button("Predict", disabled= False if file  else True)
+    # elif camera is not None:
+    #     clicked = st.button("Predict", disabled= False if camera else True)
     if clicked:
         _predict = ""
         if file:
             _predict = predict(file)
-        else:
-            _predict = predict(camera)
+        # else:
+        #     _predict = predict(camera)
         st.caption("Converted the image to 224x224 size")
         st.image(file,width=224)
         food_name = _predict["recipeName"].replace("_", " ")
